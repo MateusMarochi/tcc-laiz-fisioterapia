@@ -145,21 +145,42 @@ function Resolve-LaTeXMissingPackages {
     }
 
     $fileToPackageMap = @{
-        'newfloat.sty'          = 'newfloat'
+        'abnt.cls'              = 'abntex2'
+        'abntex-abrev.sty'      = 'abntex2'
+        'abntex-default-design.sty' = 'abntex2'
+        'bigintcalc.sty'        = 'bigintcalc'
+        'bitset.sty'            = 'bitset'
+        'breakurl.sty'          = 'breakurl'
         'caption.sty'           = 'caption'
+        'caption3.sty'          = 'caption'
+        'chngcntr.sty'          = 'chngcntr'
+        'etoolbox.sty'          = 'etoolbox'
         'float.sty'             = 'float'
-        'xkeyval.sty'           = 'xkeyval'
-        'kvoptions.sty'         = 'kvoptions'
-        'kvsetkeys.sty'         = 'kvsetkeys'
-        'kvdefinekeys.sty'      = 'kvdefinekeys'
+        'gettitlestring.sty'    = 'gettitlestring'
+        'hycolor.sty'           = 'hycolor'
+        'ifluatex.sty'          = 'ifluatex'
         'ifpdf.sty'             = 'ifpdf'
         'iftex.sty'             = 'iftex'
-        'etoolbox.sty'          = 'etoolbox'
-        'stringenc.sty'         = 'stringenc'
-        'hycolor.sty'           = 'hycolor'
-        'breakurl.sty'          = 'breakurl'
-        'perpage.sty'           = 'bigfoot'
+        'ifxetex.sty'           = 'ifxetex'
+        'infwarerr.sty'         = 'oberdiek'
+        'kvdefinekeys.sty'      = 'kvdefinekeys'
+        'kvoptions.sty'         = 'kvoptions'
+        'kvsetkeys.sty'         = 'kvsetkeys'
         'lastpage.sty'          = 'lastpage'
+        'lastpage2e.sty'        = 'lastpage'
+        'lastpagemodern.sty'    = 'lastpage'
+        'ltxcmds.sty'           = 'ltxcmds'
+        'nameref.sty'           = 'hyperref'
+        'newfloat.sty'          = 'newfloat'
+        'intcalc.sty'           = 'intcalc'
+        'pdfescape.sty'         = 'pdfescape'
+        'pdftexcmds.sty'        = 'pdftexcmds'
+        'perpage.sty'           = 'bigfoot'
+        'rerunfilecheck.sty'    = 'rerunfilecheck'
+        'stringenc.sty'         = 'stringenc'
+        'uniquecounter.sty'     = 'uniquecounter'
+        'url.sty'               = 'url'
+        'xkeyval.sty'           = 'xkeyval'
     }
 
     $packages = New-Object System.Collections.Generic.List[string]
@@ -201,20 +222,40 @@ function Resolve-LaTeXMissingPackages {
 
     switch ($packageManager.Type) {
         'TeXLive' {
-            & $packageManager.Path 'install' @packagesArray | Out-Null
+            $output = & $packageManager.Path 'install' @packagesArray 2>&1
+            $exitCode = [int]$LASTEXITCODE
+            if ($exitCode -ne 0) {
+                Write-Verbose ("tlmgr retornou código {0} na instalação padrão. Tentando modo usuário." -f $exitCode)
+                $outputUser = & $packageManager.Path '--usermode' 'install' @packagesArray 2>&1
+                $exitCode = [int]$LASTEXITCODE
+                if ($exitCode -ne 0) {
+                    Write-Warning 'Falha ao instalar os pacotes ausentes com tlmgr (modo padrão e usuário).'
+                    Write-Verbose $output
+                    Write-Verbose $outputUser
+                    return $false
+                }
+            }
         }
         'MiKTeX' {
-            & $packageManager.Path '--admin' "--install=$([string]::Join(',', $packagesArray))" | Out-Null
+            $arguments = "--install=$([string]::Join(',', $packagesArray))"
+            $output = & $packageManager.Path '--admin' $arguments 2>&1
+            $exitCode = [int]$LASTEXITCODE
+            if ($exitCode -ne 0) {
+                Write-Verbose ("mpm retornou código {0} com --admin. Tentando modo usuário." -f $exitCode)
+                $outputUser = & $packageManager.Path $arguments 2>&1
+                $exitCode = [int]$LASTEXITCODE
+                if ($exitCode -ne 0) {
+                    Write-Warning 'Falha ao instalar os pacotes ausentes com mpm (--admin e usuário).'
+                    Write-Verbose $output
+                    Write-Verbose $outputUser
+                    return $false
+                }
+            }
         }
         default {
             Write-Warning 'Gerenciador de pacotes LaTeX não suportado para instalação automática.'
             return $false
         }
-    }
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Warning 'Falha ao instalar os pacotes ausentes. Verifique manualmente a distribuição LaTeX.'
-        return $false
     }
 
     return $true

@@ -118,7 +118,9 @@ function Configure-TeXLive {
     & $tlmgrPath option repository http://mirror.ctan.org/systems/texlive/tlnet | Out-Null
     & $tlmgrPath update --self --all
     & $tlmgrPath install abntex abntex2 collection-langportuguese latexmk xindy texcount `
-        newfloat caption float xkeyval kvoptions kvsetkeys kvdefinekeys ifpdf iftex etoolbox hycolor stringenc breakurl
+        newfloat caption float chngcntr lastpage bigfoot xkeyval kvoptions kvsetkeys kvdefinekeys ifpdf iftex ifxetex ifluatex `
+        etoolbox hycolor stringenc breakurl pdftexcmds pdfescape infwarerr ltxcmds gettitlestring rerunfilecheck uniquecounter `
+        bigintcalc bitset intcalc url hyperref oberdiek
 }
 
 function Get-MiKTeXPath {
@@ -147,7 +149,7 @@ function Configure-MiKTeX {
     $mpm = Join-Path $miktexBin 'mpm.exe'
     & $mpm --admin --update-db | Out-Null
     & $mpm --admin --upgrade | Out-Null
-    & $mpm --admin --install=abntex2,latexmk,xindy,texcount,newfloat,caption,float,xkeyval,kvoptions,kvsetkeys,kvdefinekeys,ifpdf,iftex,etoolbox,hycolor,stringenc,breakurl
+    & $mpm --admin --install=abntex2,latexmk,xindy,texcount,newfloat,caption,float,chngcntr,lastpage,bigfoot,xkeyval,kvoptions,kvsetkeys,kvdefinekeys,ifpdf,iftex,ifxetex,ifluatex,etoolbox,hycolor,stringenc,breakurl,pdftexcmds,pdfescape,infwarerr,ltxcmds,gettitlestring,rerunfilecheck,uniquecounter,bigintcalc,bitset,intcalc,url,hyperref,oberdiek
 
     $initexmf = Join-Path $miktexBin 'initexmf.exe'
     if (Test-Path $initexmf) {
