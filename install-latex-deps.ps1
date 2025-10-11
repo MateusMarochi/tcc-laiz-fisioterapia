@@ -27,10 +27,12 @@
 [CmdletBinding()]
 param(
     [ValidateSet('texlive', 'miktex')]
-    [string]$Distribution = 'texlive'
+    [string]$Distribution = 'texlive',
+    [switch]$ForceReinstall
 )
 
 $ErrorActionPreference = 'Stop'
+Set-StrictMode -Version Latest
 
 function Test-Administrator {
     $currentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -53,8 +55,32 @@ function Install-PackageWinget {
     )
 
     $name = if ($CustomName) { $CustomName } else { $Id }
+    $alreadyInstalled = $false
+    if (-not $ForceReinstall) {
+        $listOutput = winget list --id $Id --exact --source winget 2>$null
+        if ($LASTEXITCODE -eq 0 -and $listOutput -match [regex]::Escape($Id)) {
+            $alreadyInstalled = $true
+        }
+    }
+
+    if ($alreadyInstalled -and -not $ForceReinstall) {
+        Write-Host "\n>>> $name já instalado. Utilize -ForceReinstall para reinstalar." -ForegroundColor Yellow
+        return
+    }
+
     Write-Host "\n>>> Instalando $name via winget..." -ForegroundColor Cyan
-    winget install --id $Id --exact --source winget --accept-package-agreements --accept-source-agreements | Out-Null
+    $arguments = @(
+        'install',
+        '--id', $Id,
+        '--exact',
+        '--source', 'winget',
+        '--accept-package-agreements',
+        '--accept-source-agreements'
+    )
+    if ($ForceReinstall) {
+        $arguments += '--force'
+    }
+    winget @arguments | Out-Null
 }
 
 function Get-TlmgrPath {
