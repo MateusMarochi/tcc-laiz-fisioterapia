@@ -76,17 +76,49 @@ $latexmkBaseArgs = @()
 
 function Get-LaTeXPackageManager {
     $tlmgr = Get-Command 'tlmgr' -ErrorAction SilentlyContinue
+    if (-not $tlmgr) {
+        $candidateRoots = @()
+        if ($env:SystemDrive) { $candidateRoots += (Join-Path $env:SystemDrive 'texlive') }
+        if ($env:ProgramFiles) { $candidateRoots += (Join-Path $env:ProgramFiles 'texlive') }
+        foreach ($root in $candidateRoots) {
+            if (-not (Test-Path $root)) { continue }
+            $found = Get-ChildItem -Path $root -Filter 'tlmgr.bat' -Recurse -ErrorAction SilentlyContinue |
+                Sort-Object FullName -Descending |
+                Select-Object -First 1
+            if ($found) {
+                $tlmgr = $found.FullName
+                break
+            }
+        }
+    }
+
     if ($tlmgr) {
-        return @{ Type = 'TeXLive'; Path = $tlmgr.Path }
+        $tlmgrPath = if ($tlmgr -is [string]) { $tlmgr } else { $tlmgr.Path }
+        return @{ Type = 'TeXLive'; Path = $tlmgrPath }
     }
 
     $mpm = Get-Command 'mpm' -ErrorAction SilentlyContinue
     if (-not $mpm) {
         $mpm = Get-Command 'mpm.exe' -ErrorAction SilentlyContinue
     }
+    if (-not $mpm) {
+        $miktexRoots = @()
+        if ($env:ProgramFiles) { $miktexRoots += (Join-Path $env:ProgramFiles 'MiKTeX\miktex\bin\x64') }
+        if ($env:ProgramFiles) { $miktexRoots += (Join-Path $env:ProgramFiles 'MiKTeX\miktex\bin') }
+        if (${env:ProgramFiles(x86)}) { $miktexRoots += (Join-Path ${env:ProgramFiles(x86)} 'MiKTeX\miktex\bin\x64') }
+        if (${env:ProgramFiles(x86)}) { $miktexRoots += (Join-Path ${env:ProgramFiles(x86)} 'MiKTeX\miktex\bin') }
+        foreach ($root in $miktexRoots) {
+            $candidate = Join-Path $root 'mpm.exe'
+            if (Test-Path $candidate) {
+                $mpm = $candidate
+                break
+            }
+        }
+    }
 
     if ($mpm) {
-        return @{ Type = 'MiKTeX'; Path = $mpm.Path }
+        $mpmPath = if ($mpm -is [string]) { $mpm } else { $mpm.Path }
+        return @{ Type = 'MiKTeX'; Path = $mpmPath }
     }
 
     return $null
