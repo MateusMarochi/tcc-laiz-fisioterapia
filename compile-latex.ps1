@@ -42,6 +42,12 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
+try {
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+} catch {
+    Write-Verbose 'Não foi possível ajustar a codificação do console para UTF-8.'
+}
+
 function Get-CommandPath {
     param(
         [Parameter(Mandatory = $true)][string]$Name,
@@ -107,16 +113,43 @@ function Resolve-LaTeXMissingPackages {
     }
 
     $fileToPackageMap = @{
-        'newfloat.sty' = 'newfloat'
-        'caption.sty'  = 'caption'
-        'float.sty'    = 'float'
+        'newfloat.sty'          = 'newfloat'
+        'caption.sty'           = 'caption'
+        'float.sty'             = 'float'
+        'xkeyval.sty'           = 'xkeyval'
+        'kvoptions.sty'         = 'kvoptions'
+        'kvsetkeys.sty'         = 'kvsetkeys'
+        'kvdefinekeys.sty'      = 'kvdefinekeys'
+        'ifpdf.sty'             = 'ifpdf'
+        'iftex.sty'             = 'iftex'
+        'etoolbox.sty'          = 'etoolbox'
+        'stringenc.sty'         = 'stringenc'
+        'hycolor.sty'           = 'hycolor'
+        'breakurl.sty'          = 'breakurl'
+        'perpage.sty'           = 'bigfoot'
+        'lastpage.sty'          = 'lastpage'
     }
 
-    $packages = @()
+    $packages = New-Object System.Collections.Generic.List[string]
     foreach ($match in $matches) {
-        $fileName = $match.Groups[1].Value
-        if ($fileToPackageMap.ContainsKey($fileName) -and $packages -notcontains $fileToPackageMap[$fileName]) {
-            $packages += $fileToPackageMap[$fileName]
+        $rawFileName = $match.Groups[1].Value
+        $fileName = ($rawFileName -split '[\\/]')[-1]
+        if ($fileToPackageMap.ContainsKey($fileName)) {
+            $packageName = $fileToPackageMap[$fileName]
+        } else {
+            $packageName = [System.IO.Path]::GetFileNameWithoutExtension($fileName)
+        }
+
+        if ([string]::IsNullOrWhiteSpace($packageName)) {
+            continue
+        }
+
+        if ($packageName -notmatch '^[A-Za-z0-9\-]+$') {
+            continue
+        }
+
+        if (-not $packages.Contains($packageName)) {
+            $packages.Add($packageName) | Out-Null
         }
     }
 
@@ -124,20 +157,22 @@ function Resolve-LaTeXMissingPackages {
         return $false
     }
 
+    $packagesArray = $packages.ToArray()
+
     $packageManager = Get-LaTeXPackageManager
     if (-not $packageManager) {
-        Write-Warning "Pacotes ausentes detectados ($($packages -join ', ')). Instale-os manualmente para prosseguir."
+        $packagesList = [string]::Join(', ', $packagesArray)
+        Write-Warning ("Pacotes ausentes detectados ({0}). Instale-os manualmente para prosseguir." -f $packagesList)
         return $false
     }
-
-    Write-Host "\n>>> Instalando automaticamente os pacotes LaTeX ausentes: $($packages -join ', ')..." -ForegroundColor Cyan
+    Write-Host "\n>>> Instalando automaticamente os pacotes LaTeX ausentes: $([string]::Join(', ', $packagesArray))..." -ForegroundColor Cyan
 
     switch ($packageManager.Type) {
         'TeXLive' {
-            & $packageManager.Path 'install' @packages | Out-Null
+            & $packageManager.Path 'install' @packagesArray | Out-Null
         }
         'MiKTeX' {
-            & $packageManager.Path '--admin' "--install=$([string]::Join(',', $packages))" | Out-Null
+            & $packageManager.Path '--admin' "--install=$([string]::Join(',', $packagesArray))" | Out-Null
         }
         default {
             Write-Warning 'Gerenciador de pacotes LaTeX não suportado para instalação automática.'
@@ -184,7 +219,7 @@ try {
         if ($latexmkExitCode -eq 0) {
             $latexmkSucceeded = $true
         } else {
-            Write-Warning "latexmk retornou o código $latexmkExitCode. Tentando reconstrução completa."
+            Write-Warning ("latexmk retornou o código {0}. Tentando reconstrução completa." -f $latexmkExitCode)
             if (-not $Clean) {
                 Write-Host "\n>>> Forçando limpeza de artefatos antes da nova tentativa..." -ForegroundColor Yellow
                 & $latexmkPath -C $texFile | Out-Null
@@ -194,7 +229,7 @@ try {
             if ($latexmkExitCode -eq 0) {
                 $latexmkSucceeded = $true
             } else {
-                Write-Warning "latexmk falhou novamente (código $latexmkExitCode). Iniciando fallback manual."
+                Write-Warning ("latexmk falhou novamente (código {0}). Iniciando fallback manual." -f $latexmkExitCode)
             }
         }
     }

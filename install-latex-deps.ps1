@@ -34,6 +34,12 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
+try {
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+} catch {
+    Write-Verbose 'Não foi possível ajustar a codificação do console para UTF-8.'
+}
+
 function Test-Administrator {
     $currentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal($currentIdentity)
@@ -111,7 +117,8 @@ function Configure-TeXLive {
 
     & $tlmgrPath option repository http://mirror.ctan.org/systems/texlive/tlnet | Out-Null
     & $tlmgrPath update --self --all
-    & $tlmgrPath install abntex abntex2 collection-langportuguese latexmk xindy texcount newfloat caption float
+    & $tlmgrPath install abntex abntex2 collection-langportuguese latexmk xindy texcount `
+        newfloat caption float xkeyval kvoptions kvsetkeys kvdefinekeys ifpdf iftex etoolbox hycolor stringenc breakurl
 }
 
 function Get-MiKTeXPath {
@@ -140,7 +147,7 @@ function Configure-MiKTeX {
     $mpm = Join-Path $miktexBin 'mpm.exe'
     & $mpm --admin --update-db | Out-Null
     & $mpm --admin --upgrade | Out-Null
-    & $mpm --admin --install=abntex2,latexmk,xindy,texcount,newfloat,caption,float
+    & $mpm --admin --install=abntex2,latexmk,xindy,texcount,newfloat,caption,float,xkeyval,kvoptions,kvsetkeys,kvdefinekeys,ifpdf,iftex,etoolbox,hycolor,stringenc,breakurl
 
     $initexmf = Join-Path $miktexBin 'initexmf.exe'
     if (Test-Path $initexmf) {
