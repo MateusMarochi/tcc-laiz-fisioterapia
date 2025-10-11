@@ -120,7 +120,7 @@ function Configure-TeXLive {
     & $tlmgrPath install abntex abntex2 collection-langportuguese latexmk xindy texcount `
         newfloat caption float chngcntr lastpage bigfoot xkeyval kvoptions kvsetkeys kvdefinekeys ifpdf iftex ifxetex ifluatex `
         etoolbox hycolor stringenc breakurl pdftexcmds pdfescape infwarerr ltxcmds gettitlestring rerunfilecheck uniquecounter `
-        bigintcalc bitset intcalc url hyperref oberdiek
+        bigintcalc bitset intcalc url hyperref oberdiek pdfpages graphics xcolor fancyhdr multirow tabularx longtable
 }
 
 function Get-MiKTeXPath {
@@ -149,7 +149,7 @@ function Configure-MiKTeX {
     $mpm = Join-Path $miktexBin 'mpm.exe'
     & $mpm --admin --update-db | Out-Null
     & $mpm --admin --upgrade | Out-Null
-    & $mpm --admin --install=abntex2,latexmk,xindy,texcount,newfloat,caption,float,chngcntr,lastpage,bigfoot,xkeyval,kvoptions,kvsetkeys,kvdefinekeys,ifpdf,iftex,ifxetex,ifluatex,etoolbox,hycolor,stringenc,breakurl,pdftexcmds,pdfescape,infwarerr,ltxcmds,gettitlestring,rerunfilecheck,uniquecounter,bigintcalc,bitset,intcalc,url,hyperref,oberdiek
+    & $mpm --admin --install=abntex2,latexmk,xindy,texcount,newfloat,caption,float,chngcntr,lastpage,bigfoot,xkeyval,kvoptions,kvsetkeys,kvdefinekeys,ifpdf,iftex,ifxetex,ifluatex,etoolbox,hycolor,stringenc,breakurl,pdftexcmds,pdfescape,infwarerr,ltxcmds,gettitlestring,rerunfilecheck,uniquecounter,bigintcalc,bitset,intcalc,url,hyperref,oberdiek,pdfpages,graphics,xcolor,fancyhdr,multirow,tabularx,longtable
 
     $initexmf = Join-Path $miktexBin 'initexmf.exe'
     if (Test-Path $initexmf) {
