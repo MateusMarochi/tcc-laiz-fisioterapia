@@ -68,13 +68,89 @@ $enginePath = Get-CommandPath -Name $Engine
 $bibtexPath = Get-CommandPath -Name 'bibtex' -Optional
 $latexmkBaseArgs = @()
 
-function Invoke-LatexmkRun {
+function Get-LaTeXPackageManager {
+    $tlmgr = Get-Command 'tlmgr' -ErrorAction SilentlyContinue
+    if ($tlmgr) {
+        return @{ Type = 'TeXLive'; Path = $tlmgr.Path }
+    }
+
+    $mpm = Get-Command 'mpm' -ErrorAction SilentlyContinue
+    if (-not $mpm) {
+        $mpm = Get-Command 'mpm.exe' -ErrorAction SilentlyContinue
+    }
+
+    if ($mpm) {
+        return @{ Type = 'MiKTeX'; Path = $mpm.Path }
+    }
+
+    return $null
+}
+
+function Resolve-LaTeXMissingPackages {
     param(
-        [string[]]$PrefixArgs = @()
+        [Parameter(Mandatory = $true)][string]$LogPath
     )
 
-    & $latexmkPath @PrefixArgs @latexmkBaseArgs
-    return $LASTEXITCODE
+    if (-not (Test-Path $LogPath)) {
+        return $false
+    }
+
+    $logContent = Get-Content -Path $LogPath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
+    if (-not $logContent) {
+        return $false
+    }
+
+    $pattern = "LaTeX Error: File `([^']+)' not found."
+    $matches = [regex]::Matches($logContent, $pattern)
+    if ($matches.Count -eq 0) {
+        return $false
+    }
+
+    $fileToPackageMap = @{
+        'newfloat.sty' = 'newfloat'
+        'caption.sty'  = 'caption'
+        'float.sty'    = 'float'
+    }
+
+    $packages = @()
+    foreach ($match in $matches) {
+        $fileName = $match.Groups[1].Value
+        if ($fileToPackageMap.ContainsKey($fileName) -and $packages -notcontains $fileToPackageMap[$fileName]) {
+            $packages += $fileToPackageMap[$fileName]
+        }
+    }
+
+    if ($packages.Count -eq 0) {
+        return $false
+    }
+
+    $packageManager = Get-LaTeXPackageManager
+    if (-not $packageManager) {
+        Write-Warning "Pacotes ausentes detectados ($($packages -join ', ')). Instale-os manualmente para prosseguir."
+        return $false
+    }
+
+    Write-Host "\n>>> Instalando automaticamente os pacotes LaTeX ausentes: $($packages -join ', ')..." -ForegroundColor Cyan
+
+    switch ($packageManager.Type) {
+        'TeXLive' {
+            & $packageManager.Path 'install' @packages | Out-Null
+        }
+        'MiKTeX' {
+            & $packageManager.Path '--admin' "--install=$([string]::Join(',', $packages))" | Out-Null
+        }
+        default {
+            Write-Warning 'Gerenciador de pacotes LaTeX não suportado para instalação automática.'
+            return $false
+        }
+    }
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning 'Falha ao instalar os pacotes ausentes. Verifique manualmente a distribuição LaTeX.'
+        return $false
+    }
+
+    return $true
 }
 
 Push-Location $workingDirectory
@@ -103,20 +179,35 @@ try {
         }
         $latexmkBaseArgs += $texFile
 
-        $latexmkExitCode = Invoke-LatexmkRun
+        & $latexmkPath @latexmkBaseArgs
+        $latexmkExitCode = [int]$LASTEXITCODE
         if ($latexmkExitCode -eq 0) {
             $latexmkSucceeded = $true
         } else {
-            Write-Warning "latexmk retornou o código $latexmkExitCode. Tentando reconstrução completa." 
+            Write-Warning "latexmk retornou o código $latexmkExitCode. Tentando reconstrução completa."
             if (-not $Clean) {
                 Write-Host "\n>>> Forçando limpeza de artefatos antes da nova tentativa..." -ForegroundColor Yellow
                 & $latexmkPath -C $texFile | Out-Null
             }
-            $latexmkExitCode = Invoke-LatexmkRun -PrefixArgs @('-gg')
+            & $latexmkPath -gg @latexmkBaseArgs
+            $latexmkExitCode = [int]$LASTEXITCODE
             if ($latexmkExitCode -eq 0) {
                 $latexmkSucceeded = $true
             } else {
-                Write-Warning "latexmk falhou novamente (código $latexmkExitCode). Iniciando fallback manual." 
+                Write-Warning "latexmk falhou novamente (código $latexmkExitCode). Iniciando fallback manual."
+            }
+        }
+    }
+
+    if (-not $latexmkSucceeded) {
+        $logPath = Join-Path (Get-Location) ("${baseName}.log")
+        $packagesInstalled = Resolve-LaTeXMissingPackages -LogPath $logPath
+        if ($packagesInstalled -and $latexmkPath) {
+            Write-Host "\n>>> Pacotes instalados. Reexecutando latexmk ($Engine)..." -ForegroundColor Cyan
+            & $latexmkPath @latexmkBaseArgs
+            $latexmkExitCode = [int]$LASTEXITCODE
+            if ($latexmkExitCode -eq 0) {
+                $latexmkSucceeded = $true
             }
         }
     }

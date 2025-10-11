@@ -111,7 +111,7 @@ function Configure-TeXLive {
 
     & $tlmgrPath option repository http://mirror.ctan.org/systems/texlive/tlnet | Out-Null
     & $tlmgrPath update --self --all
-    & $tlmgrPath install abntex abntex2 collection-langportuguese latexmk xindy texcount
+    & $tlmgrPath install abntex abntex2 collection-langportuguese latexmk xindy texcount newfloat caption float
 }
 
 function Get-MiKTeXPath {
@@ -140,7 +140,7 @@ function Configure-MiKTeX {
     $mpm = Join-Path $miktexBin 'mpm.exe'
     & $mpm --admin --update-db | Out-Null
     & $mpm --admin --upgrade | Out-Null
-    & $mpm --admin --install=abntex2,latexmk,xindy,texcount
+    & $mpm --admin --install=abntex2,latexmk,xindy,texcount,newfloat,caption,float
 
     $initexmf = Join-Path $miktexBin 'initexmf.exe'
     if (Test-Path $initexmf) {
