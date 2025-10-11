@@ -66,6 +66,16 @@ $baseName = [System.IO.Path]::GetFileNameWithoutExtension($texFile)
 $latexmkPath = Get-CommandPath -Name 'latexmk' -Optional
 $enginePath = Get-CommandPath -Name $Engine
 $bibtexPath = Get-CommandPath -Name 'bibtex' -Optional
+$latexmkBaseArgs = @()
+
+function Invoke-LatexmkRun {
+    param(
+        [string[]]$PrefixArgs = @()
+    )
+
+    & $latexmkPath @PrefixArgs @latexmkBaseArgs
+    return $LASTEXITCODE
+}
 
 Push-Location $workingDirectory
 try {
@@ -83,17 +93,40 @@ try {
         }
     }
 
+    $latexmkSucceeded = $false
     if ($latexmkPath) {
         Write-Host "\n>>> Compilando com latexmk ($Engine) para garantir conformidade ABNT..." -ForegroundColor Green
-        $latexmkArgs = switch ($Engine) {
+        $latexmkBaseArgs = switch ($Engine) {
             'pdflatex' { @('-pdf', "-pdflatex=$Engine -interaction=nonstopmode -synctex=1") }
             'xelatex' { @('-xelatex', "-xelatex=$Engine -interaction=nonstopmode -synctex=1") }
             'lualatex' { @('-lualatex', "-lualatex=$Engine -interaction=nonstopmode -synctex=1") }
         }
-        $latexmkArgs += $texFile
-        & $latexmkPath @latexmkArgs
-    } else {
-        Write-Host "\n>>> latexmk não encontrado. Executando sequência manual ($Engine + bibtex)..." -ForegroundColor Yellow
+        $latexmkBaseArgs += $texFile
+
+        $latexmkExitCode = Invoke-LatexmkRun
+        if ($latexmkExitCode -eq 0) {
+            $latexmkSucceeded = $true
+        } else {
+            Write-Warning "latexmk retornou o código $latexmkExitCode. Tentando reconstrução completa." 
+            if (-not $Clean) {
+                Write-Host "\n>>> Forçando limpeza de artefatos antes da nova tentativa..." -ForegroundColor Yellow
+                & $latexmkPath -C $texFile | Out-Null
+            }
+            $latexmkExitCode = Invoke-LatexmkRun -PrefixArgs @('-gg')
+            if ($latexmkExitCode -eq 0) {
+                $latexmkSucceeded = $true
+            } else {
+                Write-Warning "latexmk falhou novamente (código $latexmkExitCode). Iniciando fallback manual." 
+            }
+        }
+    }
+
+    if (-not $latexmkSucceeded) {
+        if (-not $latexmkPath) {
+            Write-Host "\n>>> latexmk não encontrado. Executando sequência manual ($Engine + bibtex)..." -ForegroundColor Yellow
+        } else {
+            Write-Host "\n>>> Executando sequência manual ($Engine + bibtex) para concluir a compilação..." -ForegroundColor Yellow
+        }
         $pdflatexArgs = @('-interaction=nonstopmode', '-synctex=1', $texFile)
         & $enginePath @pdflatexArgs | Out-Null
         if ($bibtexPath) {
