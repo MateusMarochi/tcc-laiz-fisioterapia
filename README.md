@@ -20,6 +20,7 @@ Mantenha todos os arquivos na mesma pasta para garantir a compilação correta d
 ## Pré-requisitos
 - Distribuição LaTeX atualizada (TeX Live, MiKTeX ou similar) com suporte a `latexmk`, `pdflatex`, `bibtex` e pacotes ABNT.
 - Compilador capaz de lidar com codificação UTF-8 e fontes Latin Modern.
+- Pacotes utilizados no `main.tex`: `abntcite`, `babel`, `breakurl`, `float`, `graphicx`, `hyperref`, `lmodern`, `pifont` e `amsmath` (com `amsfonts` e `amssymb`). Distribuições completas do TeX Live ou MiKTeX instalam todos automaticamente; em instalações mínimas, certifique-se de adicioná-los manualmente.
 
 ## Como compilar
 1. Ajuste os metadados (autor, título, programa, etc.) no preâmbulo do `modelo.tex`.
