@@ -74,26 +74,111 @@ $enginePath = Get-CommandPath -Name $Engine
 $bibtexPath = Get-CommandPath -Name 'bibtex' -Optional
 $latexmkBaseArgs = @()
 
-function Get-LaTeXPackageManager {
-    $tlmgr = Get-Command 'tlmgr' -ErrorAction SilentlyContinue
-    if (-not $tlmgr) {
-        $candidateRoots = @()
-        if ($env:SystemDrive) { $candidateRoots += (Join-Path $env:SystemDrive 'texlive') }
-        if ($env:ProgramFiles) { $candidateRoots += (Join-Path $env:ProgramFiles 'texlive') }
-        foreach ($root in $candidateRoots) {
-            if (-not (Test-Path $root)) { continue }
-            $found = Get-ChildItem -Path $root -Filter 'tlmgr.bat' -Recurse -ErrorAction SilentlyContinue |
-                Sort-Object FullName -Descending |
-                Select-Object -First 1
-            if ($found) {
-                $tlmgr = $found.FullName
-                break
+function Find-TlmgrExecutable {
+    $commandNames = @('tlmgr.bat', 'tlmgr.exe', 'tlmgr')
+    foreach ($name in $commandNames) {
+        $command = Get-Command $name -ErrorAction SilentlyContinue
+        if ($command) {
+            return $command.Path
+        }
+    }
+
+    $candidateDirectories = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+    $searchRoots = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+
+    $pathEntries = $env:PATH -split ';'
+    foreach ($entry in $pathEntries) {
+        if ([string]::IsNullOrWhiteSpace($entry)) { continue }
+        if ($entry -notlike '*texlive*') { continue }
+        $resolvedEntries = Resolve-Path -Path $entry -ErrorAction SilentlyContinue
+        foreach ($resolvedEntry in $resolvedEntries) {
+            $null = $candidateDirectories.Add($resolvedEntry.Path)
+        }
+    }
+
+    $rootHints = @($env:TEXDIR, $env:TEXLIVE_HOME, $env:TLROOT)
+    foreach ($hint in $rootHints) {
+        if (-not [string]::IsNullOrWhiteSpace($hint) -and (Test-Path $hint)) {
+            $resolvedHint = Resolve-Path -Path $hint -ErrorAction SilentlyContinue
+            foreach ($item in $resolvedHint) {
+                $null = $searchRoots.Add($item.Path)
+                $null = $candidateDirectories.Add($item.Path)
+                foreach ($suffix in @('bin', 'bin\win32', 'bin\windows')) {
+                    $candidate = Join-Path $item.Path $suffix
+                    if (-not (Test-Path $candidate)) { continue }
+                    $resolvedCandidate = Resolve-Path -Path $candidate -ErrorAction SilentlyContinue
+                    foreach ($resolvedItem in $resolvedCandidate) {
+                        $null = $candidateDirectories.Add($resolvedItem.Path)
+                    }
+                }
             }
         }
     }
 
-    if ($tlmgr) {
-        $tlmgrPath = if ($tlmgr -is [string]) { $tlmgr } else { $tlmgr.Path }
+    $defaultRoots = @()
+    if (-not [string]::IsNullOrWhiteSpace($env:SystemDrive)) {
+        $defaultRoots += (Join-Path $env:SystemDrive 'texlive')
+    }
+    if (-not [string]::IsNullOrWhiteSpace($env:ProgramFiles)) {
+        $defaultRoots += (Join-Path $env:ProgramFiles 'texlive')
+        $defaultRoots += (Join-Path $env:ProgramFiles 'TeXLive')
+    }
+
+    foreach ($root in $defaultRoots) {
+        if (-not (Test-Path $root)) { continue }
+        $resolvedRoot = Resolve-Path -Path $root -ErrorAction SilentlyContinue
+        foreach ($item in $resolvedRoot) {
+            $null = $searchRoots.Add($item.Path)
+            $null = $candidateDirectories.Add($item.Path)
+            foreach ($suffix in @('bin', 'bin\win32', 'bin\windows')) {
+                $candidate = Join-Path $item.Path $suffix
+                if (-not (Test-Path $candidate)) { continue }
+                $resolvedCandidate = Resolve-Path -Path $candidate -ErrorAction SilentlyContinue
+                foreach ($resolvedItem in $resolvedCandidate) {
+                    $null = $candidateDirectories.Add($resolvedItem.Path)
+                }
+            }
+        }
+
+        $subDirectories = Get-ChildItem -Path $root -Directory -ErrorAction SilentlyContinue
+        foreach ($subDir in $subDirectories) {
+            $null = $candidateDirectories.Add($subDir.FullName)
+            foreach ($suffix in @('bin', 'bin\win32', 'bin\windows')) {
+                $candidate = Join-Path $subDir.FullName $suffix
+                if (-not (Test-Path $candidate)) { continue }
+                $resolvedCandidate = Resolve-Path -Path $candidate -ErrorAction SilentlyContinue
+                foreach ($item in $resolvedCandidate) {
+                    $null = $candidateDirectories.Add($item.Path)
+                }
+            }
+        }
+    }
+
+    foreach ($directory in $candidateDirectories) {
+        foreach ($candidateName in @('tlmgr.bat', 'tlmgr.exe')) {
+            $candidatePath = Join-Path $directory $candidateName
+            if (Test-Path $candidatePath) {
+                return $candidatePath
+            }
+        }
+    }
+
+    foreach ($root in $searchRoots) {
+        if (-not (Test-Path $root)) { continue }
+        $fallback = Get-ChildItem -Path $root -Include 'tlmgr.bat', 'tlmgr.exe' -Recurse -File -ErrorAction SilentlyContinue |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 1
+        if ($fallback) {
+            return $fallback.FullName
+        }
+    }
+
+    return $null
+}
+
+function Get-LaTeXPackageManager {
+    $tlmgrPath = Find-TlmgrExecutable
+    if ($tlmgrPath) {
         return @{ Type = 'TeXLive'; Path = $tlmgrPath }
     }
 

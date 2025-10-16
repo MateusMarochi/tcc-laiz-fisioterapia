@@ -90,21 +90,97 @@ function Install-PackageWinget {
 }
 
 function Get-TlmgrPath {
-    $candidateRoots = @(
-        (Join-Path $env:SystemDrive 'texlive'),
-        (Join-Path $env:ProgramFiles 'texlive')
-    )
+    $commandNames = @('tlmgr.bat', 'tlmgr.exe', 'tlmgr')
+    foreach ($name in $commandNames) {
+        $command = Get-Command $name -ErrorAction SilentlyContinue
+        if ($command) {
+            return $command.Path
+        }
+    }
 
-    foreach ($root in $candidateRoots) {
-        if (Test-Path $root) {
-            $tlmgr = Get-ChildItem -Path $root -Filter 'tlmgr.bat' -Recurse -ErrorAction SilentlyContinue |
-                Sort-Object FullName -Descending |
-                Select-Object -First 1
-            if ($tlmgr) {
-                return $tlmgr.FullName
+    $pathEntries = $env:PATH -split ';'
+    foreach ($entry in $pathEntries) {
+        if ([string]::IsNullOrWhiteSpace($entry)) { continue }
+        if ($entry -notlike '*texlive*') { continue }
+        $resolvedEntries = Resolve-Path -Path $entry -ErrorAction SilentlyContinue
+        foreach ($resolvedEntry in $resolvedEntries) {
+            foreach ($candidateName in @('tlmgr.bat', 'tlmgr.exe')) {
+                $candidatePath = Join-Path $resolvedEntry.Path $candidateName
+                if (Test-Path $candidatePath) {
+                    return $candidatePath
+                }
             }
         }
     }
+
+    $rootCandidates = New-Object System.Collections.Generic.List[string]
+    foreach ($value in @($env:TEXDIR, $env:TEXLIVE_HOME, $env:TLROOT)) {
+        if (-not [string]::IsNullOrWhiteSpace($value)) {
+            $rootCandidates.Add($value) | Out-Null
+        }
+    }
+
+    $defaultRoots = @()
+    if (-not [string]::IsNullOrWhiteSpace($env:SystemDrive)) {
+        $defaultRoots += (Join-Path $env:SystemDrive 'texlive')
+    }
+    if (-not [string]::IsNullOrWhiteSpace($env:ProgramFiles)) {
+        $defaultRoots += (Join-Path $env:ProgramFiles 'texlive')
+        $defaultRoots += (Join-Path $env:ProgramFiles 'TeXLive')
+    }
+    foreach ($root in $defaultRoots) {
+        if (-not $rootCandidates.Contains($root)) {
+            $rootCandidates.Add($root) | Out-Null
+        }
+    }
+
+    foreach ($root in $rootCandidates) {
+        if (-not (Test-Path $root)) { continue }
+        $resolvedRoot = Resolve-Path -Path $root -ErrorAction SilentlyContinue
+        if (-not $resolvedRoot) { continue }
+
+        $directories = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+        $null = $directories.Add($resolvedRoot.Path)
+
+        foreach ($suffix in @('bin', 'bin\win32', 'bin\windows')) {
+            $directChild = Join-Path $resolvedRoot.Path $suffix
+            if (-not (Test-Path $directChild)) { continue }
+            $resolvedChildren = Resolve-Path -Path $directChild -ErrorAction SilentlyContinue
+            foreach ($resolvedChild in $resolvedChildren) {
+                $null = $directories.Add($resolvedChild.Path)
+            }
+        }
+
+        $subDirectories = Get-ChildItem -Path $resolvedRoot.Path -Directory -ErrorAction SilentlyContinue
+        foreach ($subDir in $subDirectories) {
+            $null = $directories.Add($subDir.FullName)
+            foreach ($suffix in @('bin', 'bin\win32', 'bin\windows')) {
+                $candidate = Join-Path $subDir.FullName $suffix
+                if (-not (Test-Path $candidate)) { continue }
+                $resolvedCandidates = Resolve-Path -Path $candidate -ErrorAction SilentlyContinue
+                foreach ($resolvedCandidate in $resolvedCandidates) {
+                    $null = $directories.Add($resolvedCandidate.Path)
+                }
+            }
+        }
+
+        foreach ($directory in $directories) {
+            foreach ($candidateName in @('tlmgr.bat', 'tlmgr.exe')) {
+                $candidatePath = Join-Path $directory $candidateName
+                if (Test-Path $candidatePath) {
+                    return $candidatePath
+                }
+            }
+        }
+
+        $fallback = Get-ChildItem -Path $resolvedRoot.Path -Include 'tlmgr.bat', 'tlmgr.exe' -Recurse -File -ErrorAction SilentlyContinue |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 1
+        if ($fallback) {
+            return $fallback.FullName
+        }
+    }
+
     return $null
 }
 
