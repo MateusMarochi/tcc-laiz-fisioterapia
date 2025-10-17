@@ -11,12 +11,13 @@ Este repositório reúne um modelo LaTeX configurado para a elaboração de Trab
 
 ## Estrutura recomendada
 - `main.tex`, `modelo.tex`, `analise_tcc.tex`: arquivos principais editáveis, mantidos na raiz ao lado dos PDFs de apoio.
+- `README.md` e `AGENTS.md`: referências de orientação que permanecem acessíveis na raiz do projeto.
 - `tex/estilos/`: classes, estilos e definições personalizados (`*.cls`, `*.sty`, `*.def`, `*.bst`, `*.ist`).
 - `tex/bibliografia/`: bases de referências bibliográficas (`*.bib`).
 - `assets/licencas/` e `assets/imagens/`: figuras institucionais e exemplos utilizados no template (`*.eps`).
 - `scripts/`: utilitários em lote para compilação no Windows.
 - `build/`: artefatos gerados automaticamente durante a compilação (logs, arquivos auxiliares, etc.), quando aplicável.
-- `docs/`: documentação auxiliar, incluindo este README e instruções adicionais.
+- `docs/`: documentação auxiliar opcional (relatórios de uso, notas de aula ou instruções complementares).
 
 Os arquivos `.tex` já estão configurados para localizar automaticamente os estilos, bibliografias e figuras nas pastas apropriadas, preservando a compilação mesmo com a estrutura organizada.
 

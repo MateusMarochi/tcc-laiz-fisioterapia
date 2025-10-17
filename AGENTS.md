@@ -14,6 +14,14 @@ Estas diretrizes se aplicam a todo o repositório e devem ser seguidas com rigor
   - Scripts auxiliares ou instruções equivalentes aos arquivos `.bat` fornecidos para usuários Windows.
   - Estrutura de diretórios espelhando a raiz deste repositório.
 
+## Organização de diretórios
+- Mantenha na raiz apenas `*.tex`, `*.pdf`, `README.md` e este `AGENTS.md`, além dos diretórios principais listados abaixo.
+- Insira novos estilos, classes e definições LaTeX em `tex/estilos/`.
+- Registre novas referências bibliográficas em `tex/bibliografia/`.
+- Armazene figuras e demais mídias em `assets/imagens/` ou `assets/licencas/`, conforme o contexto.
+- Adicione scripts auxiliares em `scripts/`, preservando a nomenclatura coerente com os utilitários existentes.
+- Utilize `docs/` apenas para materiais complementares que não sejam necessários durante a compilação principal.
+
 ## Diretrizes de redação e estilo
 - Produza todas as respostas exclusivamente em português do Brasil, adotando linguagem formal compatível com documentos acadêmicos.
 - Mantenha concordância e precisão terminológica em conformidade com o vocabulário técnico de fisioterapia presente em `modelo.tex`.
