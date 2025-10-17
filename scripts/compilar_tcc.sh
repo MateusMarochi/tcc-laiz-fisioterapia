@@ -62,6 +62,14 @@ if ! checar_comando pdflatex; then
   solicitar_instalacao texlive-latex-extra
 fi
 
+if checar_comando kpsewhich; then
+  if ! kpsewhich pdflscape.sty >/dev/null 2>&1; then
+    solicitar_instalacao texlive-latex-extra
+  fi
+else
+  solicitar_instalacao texlive-latex-extra
+fi
+
 if ! checar_comando bibtex; then
   solicitar_instalacao texlive-bibtex-extra
 fi
