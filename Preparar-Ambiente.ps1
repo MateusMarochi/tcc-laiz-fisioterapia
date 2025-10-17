@@ -65,7 +65,7 @@ function Instalar-Pacote {
         Write-Host "✅ $Nome instalado." -ForegroundColor Green
     }
     catch {
-        Write-Host "❌ Falha ao instalar $Nome: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "❌ Falha ao instalar ${Nome}: $($_.Exception.Message)" -ForegroundColor Red
         throw
     }
 }
