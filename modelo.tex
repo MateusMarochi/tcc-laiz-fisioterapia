@@ -6,7 +6,7 @@
 %%          (2011) César M. Vargas Benitez <cesarvargasb@gmail.com>
 %%          (2015) Glauber Gomes de Oliveira Brante <gbrante@utfpr.edu.br>
 
-\documentclass[openright]{normas-utf-tex} %openright = o capitulo comeca sempre em paginas impares
+\documentclass[openright]{tex/estilos/normas-utf-tex} %openright = o capitulo comeca sempre em paginas impares
 %\documentclass[oneside]{normas-utf-tex} %oneside = para documentos com numero de paginas menor que 100 (apenas frente da folha)
 
 % force A4 paper format
@@ -15,7 +15,7 @@
 \usepackage[hyphenbreaks]{breakurl}
 \urlstyle{same}
 %configuracao correta das referencias bibliograficas.
-\usepackage[alf,abnt-emphasize=bf,bibjustif,recuo=0cm,abnt-etal-cite=2,abnt-etal-list=0,abnt-thesis-year=both]{abntcite}
+\usepackage[alf,abnt-emphasize=bf,bibjustif,recuo=0cm,abnt-etal-cite=2,abnt-etal-list=0,abnt-thesis-year=both]{tex/estilos/abntcite}
 \usepackage[brazil]{babel} % pacote portugues brasileiro
 \usepackage[utf8]{inputenc} % pacote para acentuacao direta
 
@@ -192,7 +192,7 @@ Na figura~\ref{fig:dummy} é apresentado um exemplo de gráfico flutuante. Esta 
 \begin{figure}[!htb]
 	\centering
 	\caption[Exemplo de uma figura]{Exemplo de uma figura onde aparece uma imagem sem nenhum significado especial.}
-	\includegraphics[width=5cm]{./dummy.eps} % <- formatos PNG, EPS e PDF	
+    \includegraphics[width=5cm]{assets/imagens/dummy.eps} % <- formatos PNG, EPS e PDF
 	\fonte{Adaptado de \cite{abnTeX2009}}
 	\label{fig:dummy}
 \end{figure}
@@ -281,7 +281,7 @@ O estilo de formatação \LaTeX\ da UTFPR e este exemplo de utilização foram e
 %---------- Referencias ----------
 \clearpage % this is need for add +1 to pageref of bibstart used in 'ficha catalografica'.
 \label{bibstart}
-\bibliography{reflatex} % geracao automatica das referencias a partir do arquivo reflatex.bib
+\bibliography{tex/bibliografia/reflatex} % geracao automatica das referencias a partir do arquivo reflatex.bib
 \label{bibend}
 
 

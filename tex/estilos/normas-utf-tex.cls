@@ -22,7 +22,7 @@
 % dependência: abntex >= 0.9-beta2
 
 \NeedsTeXFormat{LaTeX2e}
-\def\input@path{{./abntex/}}
+\def\input@path{{tex/estilos/}}
 
 
 \input{cvs-id.def}
@@ -241,7 +241,7 @@
             \begin{minipage}[c]{0.25\linewidth}
                 \vspace{-0.6cm}
                 \begin{figure}[H]
-    			    \href{https://creativecommons.org/licenses/by/4.0/deed.pt}{\centerline{\includegraphics[width=0.1\textwidth]{./cc.eps}\includegraphics[width=0.1\textwidth]{./by.eps}}}
+                            \href{https://creativecommons.org/licenses/by/4.0/deed.pt}{\centerline{\includegraphics[width=0.1\textwidth]{assets/licencas/cc.eps}\includegraphics[width=0.1\textwidth]{assets/licencas/by.eps}}}
     			\end{figure}
     			\vspace{-0.7cm}
     			{\scriptsize \href{https://creativecommons.org/licenses/by/4.0/deed.pt}{\centerline{4.0 Internacional}}}
@@ -259,7 +259,7 @@
             \begin{minipage}[c]{0.25\linewidth}
                 \vspace{-0.6cm}
                 \begin{figure}[H]
-    			    \href{https://creativecommons.org/licenses/by-nc/4.0/deed.pt}{\centerline{\includegraphics[width=0.1\textwidth]{./cc.eps}\includegraphics[width=0.1\textwidth]{./by.eps}\includegraphics[width=0.1\textwidth]{./nc.eps}}}
+                            \href{https://creativecommons.org/licenses/by-nc/4.0/deed.pt}{\centerline{\includegraphics[width=0.1\textwidth]{assets/licencas/cc.eps}\includegraphics[width=0.1\textwidth]{assets/licencas/by.eps}\includegraphics[width=0.1\textwidth]{assets/licencas/nc.eps}}}
     			\end{figure}
     			\vspace{-0.7cm}
     			{\scriptsize \href{https://creativecommons.org/licenses/by-nc/4.0/deed.pt}{\centerline{4.0 Internacional}}}
@@ -277,7 +277,7 @@
             \begin{minipage}[c]{0.25\linewidth}
                 \vspace{-0.6cm}
                 \begin{figure}[H]
-    			    \href{https://creativecommons.org/licenses/by-nc-nd/4.0/deed.pt}{\centerline{\includegraphics[width=0.1\textwidth]{./cc.eps}\includegraphics[width=0.1\textwidth]{./by.eps}\includegraphics[width=0.1\textwidth]{./nc.eps}\includegraphics[width=0.1\textwidth]{./nd.eps}}}
+                            \href{https://creativecommons.org/licenses/by-nc-nd/4.0/deed.pt}{\centerline{\includegraphics[width=0.1\textwidth]{assets/licencas/cc.eps}\includegraphics[width=0.1\textwidth]{assets/licencas/by.eps}\includegraphics[width=0.1\textwidth]{assets/licencas/nc.eps}\includegraphics[width=0.1\textwidth]{assets/licencas/nd.eps}}}
     			\end{figure}
     			\vspace{-0.7cm}
     			{\scriptsize \href{https://creativecommons.org/licenses/by-nc-nd/4.0/deed.pt}{\centerline{4.0 Internacional}}}
@@ -295,7 +295,7 @@
             \begin{minipage}[c]{0.25\linewidth}
                 \vspace{-0.6cm}
                 \begin{figure}[H]
-    			    \href{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.pt}{\centerline{\includegraphics[width=0.1\textwidth]{./cc.eps}\includegraphics[width=0.1\textwidth]{./by.eps}\includegraphics[width=0.1\textwidth]{./nc.eps}\includegraphics[width=0.1\textwidth]{./sa.eps}}}
+                            \href{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.pt}{\centerline{\includegraphics[width=0.1\textwidth]{assets/licencas/cc.eps}\includegraphics[width=0.1\textwidth]{assets/licencas/by.eps}\includegraphics[width=0.1\textwidth]{assets/licencas/nc.eps}\includegraphics[width=0.1\textwidth]{assets/licencas/sa.eps}}}
     			\end{figure}
     			\vspace{-0.7cm}
     			{\scriptsize \href{https://creativecommons.org/licenses/by-nc-sa/4.0/deed.pt}{\centerline{4.0 Internacional}}}
@@ -313,7 +313,7 @@
             \begin{minipage}[c]{0.25\linewidth}
                 \vspace{-0.6cm}
                 \begin{figure}[H]
-    			    \href{https://creativecommons.org/licenses/by-nd/4.0/deed.pt}{\centerline{\includegraphics[width=0.1\textwidth]{./cc.eps}\includegraphics[width=0.1\textwidth]{./by.eps}\includegraphics[width=0.1\textwidth]{./nd.eps}}}
+                            \href{https://creativecommons.org/licenses/by-nd/4.0/deed.pt}{\centerline{\includegraphics[width=0.1\textwidth]{assets/licencas/cc.eps}\includegraphics[width=0.1\textwidth]{assets/licencas/by.eps}\includegraphics[width=0.1\textwidth]{assets/licencas/nd.eps}}}
     			\end{figure}
     			\vspace{-0.7cm}
     			{\scriptsize \href{https://creativecommons.org/licenses/by-nd/4.0/deed.pt}{\centerline{4.0 Internacional}}}
@@ -331,7 +331,7 @@
             \begin{minipage}[c]{0.25\linewidth}
                 \vspace{-0.6cm}
                 \begin{figure}[H]
-    			    \href{https://creativecommons.org/licenses/by-sa/4.0/deed.pt}{\centerline{\includegraphics[width=0.1\textwidth]{./cc.eps}\includegraphics[width=0.1\textwidth]{./by.eps}\includegraphics[width=0.1\textwidth]{./sa.eps}}}
+                            \href{https://creativecommons.org/licenses/by-sa/4.0/deed.pt}{\centerline{\includegraphics[width=0.1\textwidth]{assets/licencas/cc.eps}\includegraphics[width=0.1\textwidth]{assets/licencas/by.eps}\includegraphics[width=0.1\textwidth]{assets/licencas/sa.eps}}}
     			\end{figure}
     			\vspace{-0.7cm}
     			{\scriptsize \href{https://creativecommons.org/licenses/by-sa/4.0/deed.pt}{\centerline{4.0 Internacional}}}
