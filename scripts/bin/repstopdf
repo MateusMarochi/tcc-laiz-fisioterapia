@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mostrar_uso() {
+  cat >&2 <<'USO'
+Uso: repstopdf --outfile=ARQUIVO_SAIDA ARQUIVO_ENTRADA
+USO
+}
+
+saida=""
+entrada=""
+args=()
+while (($#)); do
+  case "$1" in
+    --outfile=*)
+      saida="${1#--outfile=}"
+      ;;
+    --outfile)
+      if [ $# -lt 2 ]; then
+        echo "repstopdf: opção --outfile requer um argumento" >&2
+        exit 1
+      fi
+      shift
+      saida="$1"
+      ;;
+    --*)
+      args+=("$1")
+      ;;
+    *)
+      if [ -z "$entrada" ]; then
+        entrada="$1"
+      else
+        args+=("$1")
+      fi
+      ;;
+  esac
+  shift
+done
+
+if [ -z "$saida" ] || [ -z "$entrada" ]; then
+  mostrar_uso
+  exit 1
+fi
+
+if [ ! -f "$entrada" ]; then
+  echo "repstopdf: arquivo de entrada '$entrada' não encontrado" >&2
+  exit 1
+fi
+
+dir_destino="$(dirname "$saida")"
+mkdir -p "$dir_destino"
+
+gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile="$saida" "$entrada"
