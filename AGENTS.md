@@ -13,6 +13,7 @@ Estas diretrizes se aplicam a todo o repositório e devem ser seguidas com rigor
   - Ferramentas de compilação `pdflatex`, `bibtex` e `latexmk` configuradas para codificação UTF-8.
   - Scripts auxiliares ou instruções equivalentes aos arquivos `.bat` fornecidos para usuários Windows.
   - Estrutura de diretórios espelhando a raiz deste repositório.
+- Em ambientes Linux, a validação obrigatória deve ser realizada executando o script `scripts/compilar_tcc.sh`, que instala dependências ausentes e gera o PDF no diretório `build/`. O teste deve ser executado antes de enviar contribuições.
 
 ## Organização de diretórios
 - Mantenha na raiz apenas `*.tex`, `*.pdf`, `README.md` e este `AGENTS.md`, além dos diretórios principais listados abaixo.

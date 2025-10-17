@@ -1,0 +1,28 @@
+# Arquivos temporários de compilação LaTeX
+build/
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.glg
+*.glo
+*.gls
+*.idx
+*.ilg
+*.ind
+*.ist
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdy
+
+# PDFs gerados automaticamente durante testes
+main.pdf
+tcc_compilado.pdf
+assets/licencas/*-eps-converted-to.pdf
