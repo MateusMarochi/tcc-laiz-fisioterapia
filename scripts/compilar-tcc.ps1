@@ -6,7 +6,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Position = 0)]
-    [string]$ArquivoPrincipal = "modelo.tex",
+    [string]$ArquivoPrincipal = "main.tex",
 
     [switch]$Limpar,
 
@@ -33,6 +33,25 @@ function Escrever-Aviso {
 function Escrever-Erro {
     param([string]$Mensagem)
     Write-Host "❌  $Mensagem" -ForegroundColor Red
+}
+
+function Normalizar-ArquivoPrincipal {
+    $arquivo = $ArquivoPrincipal
+
+    if ([string]::IsNullOrWhiteSpace($arquivo)) {
+        $arquivo = "main.tex"
+    }
+
+    if (-not [System.IO.Path]::HasExtension($arquivo)) {
+        $arquivo = "$arquivo.tex"
+    }
+
+    $caminhoResolvido = Resolve-Path -Path $arquivo -ErrorAction SilentlyContinue
+    if ($caminhoResolvido) {
+        $script:ArquivoPrincipal = $caminhoResolvido.ProviderPath
+    } else {
+        $script:ArquivoPrincipal = $arquivo
+    }
 }
 
 function Testar-ArquivoPrincipal {
@@ -101,6 +120,8 @@ function Sequencia-Manual {
 
 try {
     Definir-DiretorioProjeto
+    Normalizar-ArquivoPrincipal
+    Escrever-Passo "Compilando arquivo principal: $ArquivoPrincipal"
     Testar-ArquivoPrincipal
     Garantir-Executaveis
 
