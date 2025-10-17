@@ -10,12 +10,15 @@ Este repositório reúne um modelo LaTeX configurado para a elaboração de Trab
 - **Scripts auxiliares**: Arquivos batch para compilar rapidamente em ambientes Windows.
 
 ## Estrutura recomendada
-- `modelo.tex`: documento principal a ser editado com o conteúdo do TCC.
-- `*.bib`: bases de referências bibliográficas segmentadas por norma.
-- `*.cls`, `*.sty`, `*.def`: classes e estilos que implementam as diretrizes ABNT.
-- `*.eps`: figuras de exemplo utilizadas no modelo.
+- `main.tex`, `modelo.tex`, `analise_tcc.tex`: arquivos principais editáveis, mantidos na raiz ao lado dos PDFs de apoio.
+- `tex/estilos/`: classes, estilos e definições personalizados (`*.cls`, `*.sty`, `*.def`, `*.bst`, `*.ist`).
+- `tex/bibliografia/`: bases de referências bibliográficas (`*.bib`).
+- `assets/licencas/` e `assets/imagens/`: figuras institucionais e exemplos utilizados no template (`*.eps`).
+- `scripts/`: utilitários em lote para compilação no Windows.
+- `build/`: artefatos gerados automaticamente durante a compilação (logs, arquivos auxiliares, etc.), quando aplicável.
+- `docs/`: documentação auxiliar, incluindo este README e instruções adicionais.
 
-Mantenha todos os arquivos na mesma pasta para garantir a compilação correta do documento.
+Os arquivos `.tex` já estão configurados para localizar automaticamente os estilos, bibliografias e figuras nas pastas apropriadas, preservando a compilação mesmo com a estrutura organizada.
 
 ## Pré-requisitos
 - Distribuição LaTeX atualizada (TeX Live, MiKTeX ou similar) com suporte a `latexmk`, `pdflatex`, `bibtex` e pacotes ABNT.
