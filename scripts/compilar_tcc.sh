@@ -98,6 +98,10 @@ fi
 rm -rf "${SAIDA_DIR}"
 mkdir -p "${SAIDA_DIR}"
 
+export TEXINPUTS="${REPO_ROOT}/tex/estilos//:${REPO_ROOT}//:${TEXINPUTS-}"
+export BIBINPUTS="${REPO_ROOT}/tex/bibliografia//:${REPO_ROOT}//:${BIBINPUTS-}"
+export BSTINPUTS="${REPO_ROOT}/tex/estilos//:${REPO_ROOT}//:${BSTINPUTS-}"
+
 latexmk -pdf -interaction=nonstopmode -synctex=1 -output-directory="${SAIDA_DIR}" "${TEX_PRINCIPAL}"
 
 cp "${SAIDA_DIR}/main.pdf" "${SAIDA_DIR}/tcc_compilado.pdf"

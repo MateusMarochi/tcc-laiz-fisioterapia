@@ -11,8 +11,13 @@
 \CVSPackage{abntex-default-design}{\space Definicoes de design padrao do abntex}
 
 %used in abntcite.sty
-% relsize used in \authorcapstyle. If package not present, \smaller=\relax
-\IfFileExists{relsize.sty}{\RequirePackage{relsize}}{\let\smaller\relax}
+% relsize gera avisos com configurações modernas do LaTeX; implementa-se
+% uma versão neutra das macros para manter compatibilidade sem dependências
+% adicionais nem mensagens de warning durante a compilação.
+\providecommand{\smaller}[1][1]{\relax}
+\providecommand{\larger}[1][1]{\relax}
+\providecommand{\textsmaller}[2][1]{#2}
+\providecommand{\textlarger}[2][1]{#2}
 
 \providecommand{\authorcapstyle}{\relax}
 \providecommand{\authorstyle}{\relax}
