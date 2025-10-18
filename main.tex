@@ -1,5 +1,9 @@
 \pdfminorversion=7
-\documentclass[openright]{normas-utf-tex}
+\documentclass[openright]{tex/estilos/normas-utf-tex}
+
+\makeatletter
+\def\input@path{{tex/estilos/}{}}
+\makeatother
 
 \special{papersize=210mm,297mm}
 \PassOptionsToPackage{hyphens}{url}
@@ -10,7 +14,7 @@
     pdfkeywords={Respiração controlada; Parto vaginal; Fisioterapia obstétrica}]{hyperref}
 \urlstyle{same}
 \providecommand{\burl}[1]{\url{#1}}
-\usepackage[alf,abnt-emphasize=bf,bibjustif,recuo=0cm,abnt-etal-cite=2,abnt-etal-list=0,abnt-thesis-year=both]{abntcite}
+\usepackage[alf,abnt-emphasize=bf,bibjustif,recuo=0cm,abnt-etal-cite=2,abnt-etal-list=0,abnt-thesis-year=both]{tex/estilos/abntcite}
 \usepackage[brazil]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath,amsfonts,amssymb}
@@ -225,6 +229,6 @@ Apresentam-se as repercussões observadas para a atuação da fisioterapia obst�
 
 As considerações finais sintetizam os principais resultados, suas contribuições para a área da fisioterapia obstétrica e as perspectivas de continuidade. Devem ser destacadas as limitações encontradas, as sugestões para pesquisas futuras e os desdobramentos possíveis para a prática assistencial.
 
-\bibliography{main}
+\bibliography{tex/bibliografia/main}
 
 \end{document}
