@@ -135,7 +135,7 @@
 % CAPA
 
 \renewcommand{\capa}{
-	\begin{titlepage}
+        \begin{titlepage}\thispagestyle{fancy}
 		\begin{center}
 		  \begin{espacosimples} 
 				\large\ABNTchapterfont\MakeUppercase{\ABNTinstituicaodata}\\
@@ -191,7 +191,7 @@
 
 \renewcommand{\folhaderosto}
 {
-	\begin{titlepage}
+        \begin{titlepage}\thispagestyle{fancy}
 		\espaco{1.1}
 		\begin{center}
 			\begin{espacosimples}
