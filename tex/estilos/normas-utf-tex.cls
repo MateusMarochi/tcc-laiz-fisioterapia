@@ -33,9 +33,12 @@
 \PassOptionsToClass{pagestart=firstchapter,chapter=TITLE,section=TITLE}{abnt}
 
 \RequirePackage{ifthen}
+\RequirePackage{iftex}
 \RequirePackage{lastpage}
 \RequirePackage{perpage}
-\RequirePackage[utf8]{inputenc}
+\ifPDFTeX
+  \RequirePackage[utf8]{inputenc}
+\fi
 \PassOptionsToPackage{hyperindex=false}{hyperref}
 \PassOptionsToPackage{estilo=UTFPR}{tabela-simbolos}
 
