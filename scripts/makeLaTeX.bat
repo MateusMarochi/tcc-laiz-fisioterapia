@@ -2,11 +2,11 @@ set Dir_Old=%cd%
 cd /D %~dp0
 
 del /s /f *.ps *.dvi *.aux *.toc *.idx *.ind *.ilg *.log *.out *.brf *.blg *.bbl *.lot *.lof *.lsb *.lsg modelo.pdf
-latex modelo
+xelatex -interaction=nonstopmode modelo
 echo ----
 makeindex modelo.idx
 echo ----
-latex modelo
+xelatex -interaction=nonstopmode modelo
 
 setlocal enabledelayedexpansion
 set count=8
@@ -19,21 +19,19 @@ set /a count-=1
 if !count! EQU 0 goto :skip
 
 echo ----
-latex modelo
+xelatex -interaction=nonstopmode modelo
 goto :repeat
 :skip
 endlocal
 makeindex modelo.idx
 bibtex modelo
-latex modelo
+xelatex -interaction=nonstopmode modelo
 bibtex modelo
-latex modelo
+xelatex -interaction=nonstopmode modelo
 sort modelo.lsg > modelo2.lsg
 del modelo.lsg
 copy modelo2.lsg modelo.lsg
-del modelo2.lsg 
-latex modelo
-dvips modelo.dvi
-ps2pdf modelo.ps
+del modelo2.lsg
+xelatex -interaction=nonstopmode modelo
 cd /D %Dir_Old%
 set Dir_Old=

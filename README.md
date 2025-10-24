@@ -22,14 +22,14 @@ Este repositório reúne um modelo LaTeX configurado para a elaboração de Trab
 Os arquivos `.tex` já estão configurados para localizar automaticamente os estilos, bibliografias e figuras nas pastas apropriadas, preservando a compilação mesmo com a estrutura organizada.
 
 ## Pré-requisitos
-- Distribuição LaTeX atualizada (TeX Live, MiKTeX ou similar) com suporte a `latexmk`, `pdflatex`, `bibtex` e pacotes ABNT.
-- Compilador capaz de lidar com codificação UTF-8 e fontes Latin Modern.
+- Distribuição LaTeX atualizada (TeX Live, MiKTeX ou similar) com suporte a `latexmk`, `xelatex`, `bibtex` e pacotes ABNT.
+- Compilador compatível com `fontspec`, necessário para carregar a fonte Arial (recomenda-se XeLaTeX).
 - Pacotes utilizados no `main.tex`: `abntcite`, `babel`, `breakurl`, `float`, `graphicx`, `hyperref`, `lmodern`, `pifont` e `amsmath` (com `amsfonts` e `amssymb`). Distribuições completas do TeX Live ou MiKTeX instalam todos automaticamente; em instalações mínimas, certifique-se de adicioná-los manualmente.
 
 ## Como compilar
 1. Ajuste os metadados (autor, título, programa, etc.) no preâmbulo do `modelo.tex`.
 2. Atualize os capítulos e seções conforme o roteiro do TCC.
-3. Execute a sequência padrão: `pdflatex`, `bibtex`, `pdflatex` e `pdflatex` novamente. Opcionalmente, utilize `latexmk` para automatizar o fluxo.
+3. Compile o projeto com o XeLaTeX para garantir o uso da fonte Arial. Execute `latexmk -xelatex main.tex` ou rode o script `scripts/compilar_tcc.sh` em ambientes Unix-like. No Windows, utilize `scripts\compilar-tcc.ps1` (PowerShell) ou os arquivos `.bat` atualizados para XeLaTeX.
 4. Verifique se listas de figuras, tabelas e abreviaturas estão atualizadas.
 
 Para usuários Windows, os scripts `makeLaTeX.bat` ou `makePDFLaTeX.bat` podem agilizar a compilação. Em sistemas Unix-like, recomenda-se o uso do `latexmk` ou de um Makefile personalizado.

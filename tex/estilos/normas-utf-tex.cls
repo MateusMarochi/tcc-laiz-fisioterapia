@@ -33,9 +33,17 @@
 \PassOptionsToClass{pagestart=firstchapter,chapter=TITLE,section=TITLE}{abnt}
 
 \RequirePackage{ifthen}
+\RequirePackage{iftex}
+\ifXeTeX\else
+  \ifLuaTeX\else
+    \PackageError{normas-utf-tex}{Este modelo requer um compilador compatível com o pacote fontspec}{Execute o arquivo principal com o comando xelatex (recomendado) ou lualatex para gerar o PDF.}
+  \fi
+\fi
 \RequirePackage{lastpage}
 \RequirePackage{perpage}
-\RequirePackage[utf8]{inputenc}
+\ifPDFTeX
+  \RequirePackage[utf8]{inputenc}
+\fi
 \PassOptionsToPackage{hyperindex=false}{hyperref}
 \PassOptionsToPackage{estilo=UTFPR}{tabela-simbolos}
 
@@ -135,7 +143,7 @@
 % CAPA
 
 \renewcommand{\capa}{
-	\begin{titlepage}
+        \begin{titlepage}\thispagestyle{fancy}
 		\begin{center}
 		  \begin{espacosimples} 
 				\large\ABNTchapterfont\MakeUppercase{\ABNTinstituicaodata}\\
@@ -191,7 +199,7 @@
 
 \renewcommand{\folhaderosto}
 {
-	\begin{titlepage}
+        \begin{titlepage}\thispagestyle{fancy}
 		\espaco{1.1}
 		\begin{center}
 			\begin{espacosimples}

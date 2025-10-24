@@ -80,12 +80,12 @@ function Definir-DiretorioProjeto {
 
 function Garantir-Executaveis {
     $latexmk = Get-Command "latexmk" -ErrorAction SilentlyContinue
-    $pdflatex = Get-Command "pdflatex" -ErrorAction SilentlyContinue
+    $xelatex = Get-Command "xelatex" -ErrorAction SilentlyContinue
     if (-not $latexmk) {
-        Escrever-Aviso "latexmk não encontrado. A compilação utilizará a sequência pdflatex/bibtex."
+        Escrever-Aviso "latexmk não encontrado. A compilação utilizará a sequência xelatex/bibtex."
     }
-    if (-not $pdflatex) {
-        Escrever-Erro "pdflatex não encontrado. Verifique se o MiKTeX está instalado e no PATH."
+    if (-not $xelatex) {
+        Escrever-Erro "xelatex não encontrado. Verifique se o MiKTeX (ou TeX Live) está instalado e no PATH."
         exit 1
     }
 }
@@ -96,7 +96,7 @@ function Executar-Latexmk {
         [switch]$SomenteBib,
         [switch]$SemGlossario
     )
-    $argumentos = @("-pdf", "-interaction=nonstopmode", "-synctex=1", $script:ArquivoPrincipalNome)
+    $argumentos = @("-xelatex", "-interaction=nonstopmode", "-synctex=1", $script:ArquivoPrincipalNome)
     if ($Limpar) { $argumentos += "-C" }
     if ($SomenteBib) { $argumentos += "-bibtex" }
     if ($SemGlossario) { $argumentos += "-e", "\$makeindex='makeindex -s tabela-siglas.ist';", "-e", "\$makeglossaries='';" }
@@ -107,12 +107,12 @@ function Executar-Latexmk {
 }
 
 function Sequencia-Manual {
-    Escrever-Passo "Iniciando sequência manual pdflatex → bibtex → pdflatex ×2"
+    Escrever-Passo "Iniciando sequência manual xelatex → bibtex → xelatex ×2"
     $comandos = @(
-        @{ Nome = "pdflatex"; Args = @("-interaction=nonstopmode", $script:ArquivoPrincipalNome) },
+        @{ Nome = "xelatex"; Args = @("-interaction=nonstopmode", $script:ArquivoPrincipalNome) },
         @{ Nome = "bibtex"; Args = @($script:ArquivoPrincipalBase) },
-        @{ Nome = "pdflatex"; Args = @("-interaction=nonstopmode", $script:ArquivoPrincipalNome) },
-        @{ Nome = "pdflatex"; Args = @("-interaction=nonstopmode", $script:ArquivoPrincipalNome) }
+        @{ Nome = "xelatex"; Args = @("-interaction=nonstopmode", $script:ArquivoPrincipalNome) },
+        @{ Nome = "xelatex"; Args = @("-interaction=nonstopmode", $script:ArquivoPrincipalNome) }
     )
 
     foreach ($cmd in $comandos) {

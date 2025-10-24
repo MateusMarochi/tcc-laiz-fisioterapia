@@ -1,4 +1,6 @@
+\ifdefined\pdfminorversion
 \pdfminorversion=7
+\fi
 \documentclass[openright]{tex/estilos/normas-utf-tex}
 
 \makeatletter
@@ -16,17 +18,31 @@
 \providecommand{\burl}[1]{\url{#1}}
 \usepackage[alf,abnt-emphasize=bf,bibjustif,recuo=0cm,abnt-etal-cite=2,abnt-etal-list=0,abnt-thesis-year=both]{tex/estilos/abntcite}
 \usepackage[brazil]{babel}
-\usepackage[utf8]{inputenc}
 \usepackage{amsmath,amsfonts,amssymb}
 \usepackage{graphicx}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
+\usepackage{fontspec}
+\setmainfont{Arial}
+\setsansfont{Arial}
 \usepackage[final]{pdfpages}
 \usepackage{float}
 \usepackage{pifont}
+\usepackage{fancyhdr}
 
 \newcommand{\cmark}{\ding{51}}
 \newcommand{\xmark}{\ding{55}}
+
+\newcommand{\utfprCabecalho}{%
+    \fancyhf{}
+    \fancyhead[L]{\includegraphics[height=2.0cm]{assets/imagens/unidep.png}}
+    \fancyhead[R]{\includegraphics[height=2.0cm]{assets/imagens/coppex.png}}
+    \fancyfoot[C]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}%
+}
+
+\setlength{\headheight}{64pt}
+\fancypagestyle{plain}{\utfprCabecalho}
+\fancypagestyle{plainheader}{\utfprCabecalho}
 
 \instituicao{Centro Universitário de Pato Branco}
 \instituicaoSigla{UNIDEP}
@@ -40,7 +56,7 @@
 \curso{Fisioterapia}
 \titulacao{Bacharel}
 \autorizacao{(\cmark) Não autorizo a disponibilização de endereço de correio eletrônico para contato.\\
-(\xmark) Autorizo a disponibilização do seguinte correio eletrônico para contato: laiz.ferreira@email.com}
+(\xmark) Autorizo a disponibilização do seguinte correio eletrônico para contato: laizcamilifacul@gmail.com}
 \licencaCCBY{}
 \licencaCCBYNC{}
 \licencaCCBYNCND{X}
@@ -51,8 +67,8 @@
 \titulo{Os efeitos das técnicas de respiração controlada no manejo da dor em parturientes durante o parto vaginal}
 \title{The effects of controlled breathing techniques on pain management in women during vaginal childbirth}
 
-\autor{Laiz Camili Ferreira}
-\cita{FERREIRA, Laiz Camili}
+\autor{Laiz Camili Ferreira Olenik}
+\cita{OLENIK, Laiz Camili F.}
 
 \palavraschave{Respiração controlada; Trabalho de parto; Fisioterapia obstétrica}
 \keywords{Controlled breathing; Labor; Obstetric physiotherapy}
@@ -71,6 +87,8 @@
 \sloppy
 
 \begin{document}
+\pagestyle{fancy}
+\utfprCabecalho
 \pdfstringdefDisableCommands{%
         \let\MakeUppercase\relax
 }
@@ -81,12 +99,12 @@
 
 \begin{dedicatoria}
 \vspace*{\fill}
-Dedica-se este trabalho a Deus e à família da autora, em reconhecimento à força concedida em cada etapa desta jornada.\\[1ex]
+Dedico este trabalho a Deus e a minha família, em reconhecimento ao apoio em cada etapa desta jornada acedêmica.\\[1ex]
 \vspace*{\fill}
 \end{dedicatoria}
 
 \begin{agradecimentos}
-A autora agradece à orientadora, Prof.ª Me. Thais Feihrmann, pela orientação generosa, bem como às parturientes e doulas que se dispuseram a contribuir com este estudo, tornando-o possível.
+Agradeço a Prof.ª Me. Thais Feihrmann, pela orientação, bem como à parturiente Larissa e a doula que se dispuseram a contribuir com este estudo, tornando-o possível.
 \end{agradecimentos}
 
 \begin{epigrafe}
@@ -103,8 +121,8 @@ Este Trabalho de Conclusão de Curso analisou como técnicas de respiração con
 This undergraduate thesis analysed how controlled breathing techniques supported pain management for a woman in labor during vaginal childbirth. The intervention was conducted with a pregnant participant assisted within the context of obstetric physiotherapy, including home-based guidance sessions and on-site and remote follow-up throughout labor. The study sought to understand perceived pain relief, the participant's ability to apply the techniques during different stages of labor, and the contribution of the method to a humanized birth. This qualitative descriptive investigation highlighted the impact of respiratory strategies on both the participant and the strengthening of physiotherapy practice, with findings discussed in the chapters dedicated to Results and Discussion.
 \end{abstract}
 
-\listadefiguras
-\listadetabelas
+% \listadefiguras
+% \listadetabelas
 
 \sumario
 
@@ -176,38 +194,38 @@ Durante o trabalho de parto, a parturiente recebeu assistência individualizada 
 
 A pesquisa seguiu um protocolo de coleta de dados dividido em quatro etapas: seleção das possíveis gestantes para participação no relato de caso; ensino das técnicas de respiração na residência da parturiente; aplicação das técnicas durante o trabalho de parto; e relato da parturiente sobre a aplicação das técnicas e seus resultados percebidos.
 
-Após a aprovação do Comitê de Ética em Pesquisa do Centro Universitário de Pato Branco (UNIDEP), deu-se início à aplicação das técnicas de respiração na residência da gestante selecionada, no segundo semestre de 2025, bem como no hospital escolhido por ela, o Hospital Filantrópico Policlínica ou o Hospital Filantrópico São Lucas, ambos localizados na cidade de Pato Branco, Paraná.
+% Após a aprovação do Comitê de Ética em Pesquisa do Centro Universitário de Pato Branco (UNIDEP), deu-se início à aplicação das técnicas de respiração na residência da gestante selecionada, no segundo semestre de 2025, bem como no hospital escolhido por ela, o Hospital Filantrópico Policlínica ou o Hospital Filantrópico São Lucas, ambos localizados na cidade de Pato Branco, Paraná.
 
 A intervenção ocorreu de forma individual, com a realização de três sessões de treinamento respiratório na casa da gestante durante um mês, cada uma com duração média de 40 minutos. Essas sessões tiveram como objetivo orientar a parturiente na prática de técnicas como respiração abdominal profunda, respiração torácica lenta e respiração de pressão, adaptadas conforme as fases do trabalho de parto. Além dos encontros presenciais, a participante foi incentivada a praticar os exercícios em casa, com apoio e monitoramento remoto via WhatsApp. O acompanhamento da aplicação das técnicas também aconteceu durante o trabalho de parto, em ambiente hospitalar, com supervisão da pesquisadora e de uma fisioterapeuta, garantindo a segurança da paciente.
 
 A técnica aplicada neste estudo baseou-se no protocolo descrito por \citeonline{almeida2005}, o qual propõe estratégias de respiração e relaxamento como forma de favorecer a experiência do trabalho de parto. Embora este tenha sido o principal referencial metodológico adotado, destaca-se que o artigo utilizado também se apoia em autores clássicos, como Maldonado \citeyear{maldonado1991} e Lucas \citeyear{lucas1983}, que exploram os aspectos psicológicos da gestação, do parto e do puerpério, bem como a facilitação psicológica do parto. Esses referenciais ofereceram embasamento teórico complementar e reforçaram a importância das técnicas utilizadas na assistência à parturiente.
 
-\section{Aspectos Éticos}
-\label{sec:etica}
+% \section{Aspectos Éticos}
+% \label{sec:etica}
 
-A pesquisa foi submetida à apreciação do Comitê de Ética em Pesquisa, em conformidade com a Resolução nº 466/2012 do Conselho Nacional de Saúde, que trata das diretrizes e normas regulamentadoras de pesquisas envolvendo seres humanos. A participante foi devidamente informada sobre os objetivos do estudo, e os riscos envolvidos foram considerados mínimos, relacionados à possibilidade de exposição indevida de dados pessoais. Esses riscos foram mitigados por meio de codificação, sigilo das informações e assinatura do Termo de Consentimento Livre e Esclarecido, bem como do termo de uso de imagem, assegurando o anonimato em registros audiovisuais.
+% A pesquisa foi submetida à apreciação do Comitê de Ética em Pesquisa, em conformidade com a Resolução nº 466/2012 do Conselho Nacional de Saúde, que trata das diretrizes e normas regulamentadoras de pesquisas envolvendo seres humanos. A participante foi devidamente informada sobre os objetivos do estudo, e os riscos envolvidos foram considerados mínimos, relacionados à possibilidade de exposição indevida de dados pessoais. Esses riscos foram mitigados por meio de codificação, sigilo das informações e assinatura do Termo de Consentimento Livre e Esclarecido, bem como do termo de uso de imagem, assegurando o anonimato em registros audiovisuais.
 
-Entre os benefícios observados, destacaram-se a contribuição para o fortalecimento da fisioterapia obstétrica, a valorização de sua atuação no contexto do parto humanizado e a importância das técnicas não farmacológicas, como a respiração controlada, na promoção do bem-estar da parturiente. Ademais, o estudo ressaltou os impactos positivos das práticas fisioterapêuticas na experiência do trabalho de parto, especialmente quando realizadas em um contexto acolhedor e respeitoso às necessidades físicas, emocionais e espirituais da mulher.
+% Entre os benefícios observados, destacaram-se a contribuição para o fortalecimento da fisioterapia obstétrica, a valorização de sua atuação no contexto do parto humanizado e a importância das técnicas não farmacológicas, como a respiração controlada, na promoção do bem-estar da parturiente. Ademais, o estudo ressaltou os impactos positivos das práticas fisioterapêuticas na experiência do trabalho de parto, especialmente quando realizadas em um contexto acolhedor e respeitoso às necessidades físicas, emocionais e espirituais da mulher.
 
 \chapter{Resultados}
 \label{chap:resultados}
 
-Este capítulo apresenta os dados obtidos a partir do acompanhamento fisioterapêutico da parturiente. Os resultados foram organizados em subseções que contemplam a caracterização da participante, a evolução da dor e as percepções qualitativas registradas durante o processo de parturição.
+% Este capítulo apresenta os dados obtidos a partir do acompanhamento fisioterapêutico da parturiente. Os resultados foram organizados em subseções que contemplam a caracterização da participante, a evolução da dor e as percepções qualitativas registradas durante o processo de parturição.
 
 \section{Caracterização da Participante}
 \label{sec:caracterizacao}
 
-Descreve-se nesta seção o perfil sociodemográfico e obstétrico da participante, incluindo idade, contexto familiar, histórico gestacional e condições clínicas relevantes para a compreensão do caso acompanhado.
+% Descreve-se nesta seção o perfil sociodemográfico e obstétrico da participante, incluindo idade, contexto familiar, histórico gestacional e condições clínicas relevantes para a compreensão do caso acompanhado.
 
 \section{Evolução da Dor e da Respiração}
 \label{sec:evolucao}
 
-Apresentam-se a seguir as medidas e narrativas referentes à evolução da dor e à aplicação das técnicas de respiração controlada em cada fase do trabalho de parto. Devem ser incluídos os instrumentos de avaliação utilizados, a frequência das contrações, as adaptações das técnicas e demais observações clínicas pertinentes.
+% Apresentam-se a seguir as medidas e narrativas referentes à evolução da dor e à aplicação das técnicas de respiração controlada em cada fase do trabalho de parto. Devem ser incluídos os instrumentos de avaliação utilizados, a frequência das contrações, as adaptações das técnicas e demais observações clínicas pertinentes.
 
 \section{Percepções Qualitativas}
 \label{sec:percepcoes}
 
-Compilam-se aqui os relatos da parturiente, da doula e da equipe de fisioterapia acerca da experiência vivenciada, destacando aspectos emocionais, espirituais e funcionais atribuídos à intervenção. A parturiente, identificada como Larissa, descreveu ter experimentado intensa alegria ao reconhecer o início efetivo do trabalho de parto após a indução farmacológica. A expectativa de que o processo evoluísse favoreceu o engajamento com as condutas propostas, apesar do receio inicial de não suportar a intensidade dolorosa das contrações.
+A parturiente, identificada como Larissa, descreveu ter experimentado intensa alegria ao reconhecer o início efetivo do trabalho de parto após a indução farmacológica. A expectativa de que o processo evoluísse favoreceu o engajamento com as condutas propostas, apesar do receio inicial de não suportar a intensidade dolorosa das contrações.
 
 A orientação sobre a respiração controlada foi recordada como elemento central da assistência fisioterapêutica. Larissa salientou que os comandos para inspirar e expirar de forma ritmada durante cada contração eram reforçados continuamente, sobretudo quando a dor tendia a desorganizar sua atenção. Essa supervisão contribuiu para que a parturiente ajustasse o padrão ventilatório às diferentes fases do parto, utilizando ciclos mais tranquilos nas contrações leves e cadências aceleradas nas contrações mais vigorosas.
 
@@ -220,22 +238,22 @@ Do ponto de vista emocional, Larissa atribuiu a sensação de confiança ao supo
 \chapter{Discussão}
 \label{chap:discussao}
 
-Neste capítulo, interpretam-se os resultados obtidos à luz da literatura científica vigente. A análise crítica deve considerar convergências e divergências em relação a estudos prévios, bem como as especificidades do caso acompanhado.
+% Neste capítulo, interpretam-se os resultados obtidos à luz da literatura científica vigente. A análise crítica deve considerar convergências e divergências em relação a estudos prévios, bem como as especificidades do caso acompanhado.
 
 \section{Integração com a Literatura}
 \label{sec:integracao-literatura}
 
-São relacionados os achados desta pesquisa com evidências nacionais e internacionais sobre técnicas de respiração controlada no trabalho de parto, destacando-se contribuições, limitações e implicações clínicas.
+% São relacionados os achados desta pesquisa com evidências nacionais e internacionais sobre técnicas de respiração controlada no trabalho de parto, destacando-se contribuições, limitações e implicações clínicas.
 
 \section{Implicações para a Prática Fisioterapêutica}
 \label{sec:implicacoes-pratica}
 
-Apresentam-se as repercussões observadas para a atuação da fisioterapia obstétrica em contextos hospitalares e domiciliares, incluindo recomendações para protocolos assistenciais, formação profissional e ações interdisciplinares.
+% Apresentam-se as repercussões observadas para a atuação da fisioterapia obstétrica em contextos hospitalares e domiciliares, incluindo recomendações para protocolos assistenciais, formação profissional e ações interdisciplinares.
 
 \chapter{Considerações Finais}
 \label{chap:consideracoes-finais}
 
-As considerações finais sintetizam os principais resultados, suas contribuições para a área da fisioterapia obstétrica e as perspectivas de continuidade. Devem ser destacadas as limitações encontradas, as sugestões para pesquisas futuras e os desdobramentos possíveis para a prática assistencial.
+% As considerações finais sintetizam os principais resultados, suas contribuições para a área da fisioterapia obstétrica e as perspectivas de continuidade. Devem ser destacadas as limitações encontradas, as sugestões para pesquisas futuras e os desdobramentos possíveis para a prática assistencial.
 
 %---------- Referências ----------
 \clearpage % garante a contagem correta de páginas para a ficha catalográfica
