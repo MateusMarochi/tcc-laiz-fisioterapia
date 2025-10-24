@@ -34,6 +34,11 @@
 
 \RequirePackage{ifthen}
 \RequirePackage{iftex}
+\ifXeTeX\else
+  \ifLuaTeX\else
+    \PackageError{normas-utf-tex}{Este modelo requer um compilador compatível com o pacote fontspec}{Execute o arquivo principal com o comando xelatex (recomendado) ou lualatex para gerar o PDF.}
+  \fi
+\fi
 \RequirePackage{lastpage}
 \RequirePackage{perpage}
 \ifPDFTeX
