@@ -24,9 +24,20 @@
 \usepackage[final]{pdfpages}
 \usepackage{float}
 \usepackage{pifont}
+\usepackage{fancyhdr}
 
 \newcommand{\cmark}{\ding{51}}
 \newcommand{\xmark}{\ding{55}}
+
+\setlength{\headheight}{48pt}
+\fancypagestyle{plain}{%
+    \fancyhf{}
+    \fancyhead[L]{\includegraphics[height=1.2cm]{assets/imagens/unidep.png}}
+    \fancyhead[R]{\includegraphics[height=1.2cm]{assets/imagens/coppex.png}}
+    \fancyfoot[C]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+}
 
 \instituicao{Centro Universitário de Pato Branco}
 \instituicaoSigla{UNIDEP}
@@ -71,6 +82,13 @@
 \sloppy
 
 \begin{document}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\includegraphics[height=1.2cm]{assets/imagens/unidep.png}}
+\fancyhead[R]{\includegraphics[height=1.2cm]{assets/imagens/coppex.png}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
 \pdfstringdefDisableCommands{%
         \let\MakeUppercase\relax
 }
